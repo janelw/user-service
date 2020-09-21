@@ -16,6 +16,7 @@ public class user implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "user_sequence", schema = "user_sequence")
     @Column(name = "user_id")
     private int userId;
 
@@ -64,7 +65,8 @@ public class user implements Serializable{
     @Column(name = "time_created")
     private Timestamp created;
 
-    @Column(name = "user_role")
+    @ManyToMany
+    @JoinTable(name = "user_role")
     private role role;
 
 
