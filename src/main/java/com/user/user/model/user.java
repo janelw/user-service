@@ -23,7 +23,7 @@ import com.user.user.model.role;
 
 
 @Entity
-@Table(name = "tempusers")
+@Table(name = "users")
 public class user{
 
     @Id
@@ -90,19 +90,18 @@ public class user{
     @Column(name = "status")
     private Boolean enabled;
 
-    // @OneToOne(cascade = CascadeType.ALL)
-    // private ConfirmationToken confirmationtoken;
+    @Column(name = "verification_code")
+    private String verificationcode;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "rolejoin", joinColumns = @JoinColumn(name= "user_id"), inverseJoinColumns = @JoinColumn(name = "roleid"))
     private Set<role> roles;
 
 
-
     public user() {
     }
 
-    public user(int userId, String firstName, String lastName, String userName, String passWord, String email, String phonenumber, String hAddress, String hCity, String hState, String hZip, Timestamp created, Boolean enabled, Set<role> roles) {
+    public user(int userId, String firstName, String lastName, String userName, String passWord, String email, String phonenumber, String hAddress, String hCity, String hState, String hZip, Timestamp created, Boolean enabled, String verificationcode, Set<role> roles) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -116,6 +115,7 @@ public class user{
         this.hZip = hZip;
         this.created = created;
         this.enabled = enabled;
+        this.verificationcode = verificationcode;
         this.roles = roles;
     }
 
@@ -227,6 +227,14 @@ public class user{
         this.enabled = enabled;
     }
 
+    public String getVerificationcode() {
+        return this.verificationcode;
+    }
+
+    public void setVerificationcode(String verificationcode) {
+        this.verificationcode = verificationcode;
+    }
+
     public Set<role> getRoles() {
         return this.roles;
     }
@@ -300,6 +308,11 @@ public class user{
         return this;
     }
 
+    public user verificationcode(String verificationcode) {
+        this.verificationcode = verificationcode;
+        return this;
+    }
+
     public user roles(Set<role> roles) {
         this.roles = roles;
         return this;
@@ -313,12 +326,12 @@ public class user{
             return false;
         }
         user user = (user) o;
-        return userId == user.userId && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(userName, user.userName) && Objects.equals(passWord, user.passWord) && Objects.equals(email, user.email) && Objects.equals(phonenumber, user.phonenumber) && Objects.equals(hAddress, user.hAddress) && Objects.equals(hCity, user.hCity) && Objects.equals(hState, user.hState) && Objects.equals(hZip, user.hZip) && Objects.equals(created, user.created) && Objects.equals(enabled, user.enabled) && Objects.equals(roles, user.roles);
+        return userId == user.userId && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(userName, user.userName) && Objects.equals(passWord, user.passWord) && Objects.equals(email, user.email) && Objects.equals(phonenumber, user.phonenumber) && Objects.equals(hAddress, user.hAddress) && Objects.equals(hCity, user.hCity) && Objects.equals(hState, user.hState) && Objects.equals(hZip, user.hZip) && Objects.equals(created, user.created) && Objects.equals(enabled, user.enabled) && Objects.equals(verificationcode, user.verificationcode) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, userName, passWord, email, phonenumber, hAddress, hCity, hState, hZip, created, enabled, roles);
+        return Objects.hash(userId, firstName, lastName, userName, passWord, email, phonenumber, hAddress, hCity, hState, hZip, created, enabled, verificationcode, roles);
     }
 
     @Override
@@ -337,6 +350,7 @@ public class user{
             ", hZip='" + getHZip() + "'" +
             ", created='" + getCreated() + "'" +
             ", enabled='" + isEnabled() + "'" +
+            ", verificationcode='" + getVerificationcode() + "'" +
             ", roles='" + getRoles() + "'" +
             "}";
     }

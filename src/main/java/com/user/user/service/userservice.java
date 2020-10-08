@@ -43,26 +43,25 @@ public class userservice {
 
 
 
-    public void register(user users){
-    
-    // String randomCode = RandomString.make(64);
-    // users.setVerificationcode(randomCode);
+    public user register(user users){
+    String randomCode = RandomString.make(64);
+    users.setVerificationcode(randomCode);
     users.setEnabled(false);
     users.setCreated(new Timestamp(System.currentTimeMillis()));
     
-    ur.save(users);
+    return ur.save(users);
     
 
     }
 
-    public void sendVerificationEmail(user user){
-        String subject = "Please verify your registration";
-        String senderName = "Recruitment";
-        String mailContent = "<p>Dear" + user.getFirstName() + ",</p>";
-        mailContent += "<p> Please click the link below to verify your email</p>";
-        mailContent += "<p> Thank you <br> Registration Team</p>";
+    // public void sendVerificationEmail(user user){
+    //     String subject = "Please verify your registration";
+    //     String senderName = "Recruitment";
+    //     String mailContent = "<p>Dear" + user.getFirstName() + ",</p>";
+    //     mailContent += "<p> Please click the link below to verify your email</p>";
+    //     mailContent += "<p> Thank you <br> Registration Team</p>";
         
-    }
+    // }
 
 
 

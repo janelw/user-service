@@ -3,7 +3,6 @@ package com.user.user.service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import com.user.user.model.ConfirmationToken;
 import com.user.user.model.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,21 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+// import software.amazon.awssdk.services.ses.*;
+// import software.amazon.awssdk.services.ses.model.SendCustomVerificationEmailRequest;
+// import software.amazon.awssdk.services.ses.model.SendCustomVerificationEmailResponse;
 
 
 @Service
 public class emailservice {
 
+    
 
+
+
+
+
+    
     @Autowired
     public JavaMailSender emailSender;
 

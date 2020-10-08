@@ -17,4 +17,7 @@ public interface userrepo extends JpaRepository<user, Integer> {
 
     @Query(value = "SELECT * FROM users u WHERE u.email = :email", nativeQuery = true)
     user getUserByEmail(@Param("email") String email);
+
+    @Query(value = "SELECT * FROM users u WHERE u.verification_code = :verification_code", nativeQuery = true)
+    user getUserByToken(@Param("verification_code") String verificationcode);
 }

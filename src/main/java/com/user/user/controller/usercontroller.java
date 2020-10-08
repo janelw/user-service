@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,10 +30,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.user.user.model.ConfirmationToken;
+
 import com.user.user.model.role;
 import com.user.user.model.user;
-import com.user.user.repository.confirmtokenrepo;
+import com.user.user.repository.userrepo;
 
 @RestController
 @RequestMapping("/user")
@@ -44,14 +45,13 @@ public class usercontroller {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // @Autowired
-    // private confirmationtokenservice cts;
-
-    @Autowired
-    confirmtokenrepo cr;
+  
 
     @Autowired
     private emailservice es;
+
+    @Autowired
+    private userrepo ur;
 
     // @ModelAttribute("user") //When User submits form, this is where the user data is stored to be used in the POST
     // public user newuser(){
@@ -65,53 +65,37 @@ public class usercontroller {
     //     return mv;
     // }
     @PostMapping("/register")
-    public void create(@RequestBody user users) {  //@Model Attribute is being used in place of response body here 
+    public String create(@RequestBody user users) {  //@Model Attribute is being used in place of response body here 
 
             String pwd = users.getPassWord();
             String encryptPwd = passwordEncoder.encode(pwd);
             users.setPassWord(encryptPwd);
-            us.register(users);
+            user registereduser = us.register(users);
 
-
-            es.sendSimpleEmail(users.getEmail(), "Confirmation Email", "To Confirm your email click here:");
-
-            //create a new confirmation token 
-            // ConfirmationToken confirmationToken = new ConfirmationToken(users);
-            // cr.save(confirmationToken);
-
-            // SimpleMailMessage mailMessage = new SimpleMailMessage();
-            // mailMessage.setTo(users.getEmail());
-            // mailMessage.setSubject("Complete Registration!");
-            // mailMessage.setFrom("jgwsoftdev@gmail.com");
-            // mailMessage.setText("To Confirm your account, please click here: "
-            // + "http://locahost:8080/activation?token" +confirmationToken.getConfirmationToken());
-
-            // es.sendEmail(mailMessage);
-
-      
+            es.sendSimpleEmail(users.getEmail(), "Confirmation Email", "To confirm your email address, use this verification code: " + registereduser.getVerificationcode());
+            return "Verification code sent!";
         }
             
        
         
     
 
-    // @GetMapping("/activation")
-    // public ModelAndView activation(ModelAndView modelAndView, @RequestParam("token") String token) {
+    @GetMapping("/activation/")
+    public String activation(@RequestParam String verificationcode ){
         
-    //     ConfirmationToken confirmtoken = cts.findByToken(token);
 
-    //     if(token !=null){
-    //         cts.confirmUser(confirmtoken);
-    //         modelAndView.setViewName("accountVerified");
-    //     }else{
-    //         modelAndView.addObject("message", "The link is invalid or broken!");
-    //         modelAndView.setViewName("error");
-    //     }
+         
+    user confirmeduser = ur.getUserByToken(verificationcode);
 
-    //     return modelAndView;
+        confirmeduser.setEnabled(true);
+        
+        ur.save(confirmeduser);
+        
+
+        return "Your account has been confirmed!";
 
     
-    // }
+    }
 
     
     @GetMapping("/all")

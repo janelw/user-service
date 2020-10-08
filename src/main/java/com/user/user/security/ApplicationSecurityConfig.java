@@ -50,6 +50,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter{
         .and()
         .authorizeRequests().antMatchers("/cand/**").hasAnyRole("CAND")
         .and()
+        .authorizeRequests().antMatchers("/recr/**").hasAnyRole("RECR")
+        .and()
+        .authorizeRequests().antMatchers("/panel/**").hasAnyRole("PANEL")
+        .and()
+        .authorizeRequests().antMatchers("/inter/**").hasAnyRole("INTER")
+        .and()
+        .authorizeRequests().antMatchers("/hr/**").hasAnyRole("HR")
+        .and()
         .authorizeRequests().antMatchers("/admin/**").authenticated().anyRequest().hasAnyRole("ADMIN");
         // .and()
         // .formLogin().permitAll();
