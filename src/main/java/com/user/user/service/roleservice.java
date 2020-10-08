@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.user.user.model.role;
+import com.user.user.model.user;
 import com.user.user.repository.rolerepo;
 
 @Service
@@ -23,15 +24,14 @@ public class roleservice {
 
     }
 
-    public Optional<role> findById(int id){
-        return rr.findById(id);
+    public role findRoleById(int id){
+        return rr.findRoleById(id);
     }
 
-    public role findbyRole(String role){
-        return rr.findbyRole(role);
-    }
 
     public role updateRole(role role){
         return rr.save(role);
     }
+
+
 }

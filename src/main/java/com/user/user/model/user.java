@@ -1,79 +1,108 @@
 package com.user.user.model;
 
-
-import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.*;
-import org.springframework.stereotype.*;
-import com.user.user.model.role;  
+import javax.validation.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+import javax.validation.constraints.Size;
+
+
+// import org.springframework.security.core.GrantedAuthority;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.userdetails.UserDetails;
+
+import com.user.user.model.role;
 //Tells spring boot this is a component 
-@Component 
+
+
 @Entity
-@Table(name = "users")
-public class user implements Serializable{
-    
+@Table(name = "tempusers")
+public class user{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @SequenceGenerator(name = "user_sequence", schema = "user_sequence")
     @Column(name = "user_id")
     private int userId;
 
+    @Valid
+    @NotBlank
+    @Size(min = 30)
     @Column(name = "first_name")
     private String firstName;
 
+    @NotBlank
     @Column(name = "last_name")
     private String lastName;
 
+    @NotBlank
     @Column(name = "user_name")
     private String userName;
 
+    @NotBlank
+    @Size(min = 4)
     @Column(name = "pass_word")
     private String passWord;
 
-    @Column(name  = "email")
+    @Email
+    @NotBlank
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "phone_number")
+    @Valid
+    @NotBlank
+    @Column(name = "phonenumber")
     private String phonenumber;
 
-    @Column(name = "home_add")
+    @Valid
+    @NotBlank
+    @Column(name = "homeadd")
     private String hAddress;
 
-    @Column(name = "home_city")
+    @Valid
+    @NotBlank
+    @Column(name = "homecity")
     private String hCity;
 
-    @Column(name = "home_state")
+    @Valid
+    @NotBlank
+    @Column(name = "homestate")
     private String hState;
 
-    @Column(name = "home_zip")
+    @Valid
+    @NotBlank
+    @Column(name = "homezip")
     private String hZip;
 
-    @Column(name = "work_add")
-    private String wAddress;
 
-    @Column(name = "work_city" )
-    private String wCity;
-
-    @Column(name = "work_state")
-    private String wState;
-
-    @Column(name = "work_zip")
-    private String wZip;
-
+    @Valid
+    @NotBlank
     @Column(name = "time_created")
     private Timestamp created;
 
-    @ManyToMany
-    @JoinTable(name = "user_role")
-    private role role;
+    @Column(name = "status")
+    private Boolean enabled;
+
+    // @OneToOne(cascade = CascadeType.ALL)
+    // private ConfirmationToken confirmationtoken;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "rolejoin", joinColumns = @JoinColumn(name= "user_id"), inverseJoinColumns = @JoinColumn(name = "roleid"))
+    private Set<role> roles;
+
 
 
     public user() {
     }
 
-    public user(int userId, String firstName, String lastName, String userName, String passWord, String email, String phonenumber, String hAddress, String hCity, String hState, String hZip, String wAddress, String wCity, String wState, String wZip, Timestamp created, role role) {
+    public user(int userId, String firstName, String lastName, String userName, String passWord, String email, String phonenumber, String hAddress, String hCity, String hState, String hZip, Timestamp created, Boolean enabled, Set<role> roles) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -85,12 +114,9 @@ public class user implements Serializable{
         this.hCity = hCity;
         this.hState = hState;
         this.hZip = hZip;
-        this.wAddress = wAddress;
-        this.wCity = wCity;
-        this.wState = wState;
-        this.wZip = wZip;
         this.created = created;
-        this.role = role;
+        this.enabled = enabled;
+        this.roles = roles;
     }
 
     public int getUserId() {
@@ -181,38 +207,6 @@ public class user implements Serializable{
         this.hZip = hZip;
     }
 
-    public String getWAddress() {
-        return this.wAddress;
-    }
-
-    public void setWAddress(String wAddress) {
-        this.wAddress = wAddress;
-    }
-
-    public String getWCity() {
-        return this.wCity;
-    }
-
-    public void setWCity(String wCity) {
-        this.wCity = wCity;
-    }
-
-    public String getWState() {
-        return this.wState;
-    }
-
-    public void setWState(String wState) {
-        this.wState = wState;
-    }
-
-    public String getWZip() {
-        return this.wZip;
-    }
-
-    public void setWZip(String wZip) {
-        this.wZip = wZip;
-    }
-
     public Timestamp getCreated() {
         return this.created;
     }
@@ -221,12 +215,24 @@ public class user implements Serializable{
         this.created = created;
     }
 
-    public role getRole() {
-        return this.role;
+    public Boolean isEnabled() {
+        return this.enabled;
     }
 
-    public void setRole(role role) {
-        this.role = role;
+    public Boolean getEnabled() {
+        return this.enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Set<role> getRoles() {
+        return this.roles;
+    }
+
+    public void setRoles(Set<role> roles) {
+        this.roles = roles;
     }
 
     public user userId(int userId) {
@@ -284,33 +290,18 @@ public class user implements Serializable{
         return this;
     }
 
-    public user wAddress(String wAddress) {
-        this.wAddress = wAddress;
-        return this;
-    }
-
-    public user wCity(String wCity) {
-        this.wCity = wCity;
-        return this;
-    }
-
-    public user wState(String wState) {
-        this.wState = wState;
-        return this;
-    }
-
-    public user wZip(String wZip) {
-        this.wZip = wZip;
-        return this;
-    }
-
     public user created(Timestamp created) {
         this.created = created;
         return this;
     }
 
-    public user role(role role) {
-        this.role = role;
+    public user enabled(Boolean enabled) {
+        this.enabled = enabled;
+        return this;
+    }
+
+    public user roles(Set<role> roles) {
+        this.roles = roles;
         return this;
     }
 
@@ -322,12 +313,12 @@ public class user implements Serializable{
             return false;
         }
         user user = (user) o;
-        return userId == user.userId && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(userName, user.userName) && Objects.equals(passWord, user.passWord) && Objects.equals(email, user.email) && Objects.equals(phonenumber, user.phonenumber) && Objects.equals(hAddress, user.hAddress) && Objects.equals(hCity, user.hCity) && Objects.equals(hState, user.hState) && Objects.equals(hZip, user.hZip) && Objects.equals(wAddress, user.wAddress) && Objects.equals(wCity, user.wCity) && Objects.equals(wState, user.wState) && Objects.equals(wZip, user.wZip) && Objects.equals(created, user.created) && Objects.equals(role, user.role);
+        return userId == user.userId && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(userName, user.userName) && Objects.equals(passWord, user.passWord) && Objects.equals(email, user.email) && Objects.equals(phonenumber, user.phonenumber) && Objects.equals(hAddress, user.hAddress) && Objects.equals(hCity, user.hCity) && Objects.equals(hState, user.hState) && Objects.equals(hZip, user.hZip) && Objects.equals(created, user.created) && Objects.equals(enabled, user.enabled) && Objects.equals(roles, user.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, userName, passWord, email, phonenumber, hAddress, hCity, hState, hZip, wAddress, wCity, wState, wZip, created, role);
+        return Objects.hash(userId, firstName, lastName, userName, passWord, email, phonenumber, hAddress, hCity, hState, hZip, created, enabled, roles);
     }
 
     @Override
@@ -344,12 +335,9 @@ public class user implements Serializable{
             ", hCity='" + getHCity() + "'" +
             ", hState='" + getHState() + "'" +
             ", hZip='" + getHZip() + "'" +
-            ", wAddress='" + getWAddress() + "'" +
-            ", wCity='" + getWCity() + "'" +
-            ", wState='" + getWState() + "'" +
-            ", wZip='" + getWZip() + "'" +
             ", created='" + getCreated() + "'" +
-            ", role='" + getRole() + "'" +
+            ", enabled='" + isEnabled() + "'" +
+            ", roles='" + getRoles() + "'" +
             "}";
     }
 
