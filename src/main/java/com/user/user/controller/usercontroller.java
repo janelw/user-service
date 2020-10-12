@@ -1,10 +1,17 @@
 package com.user.user.controller;
 
 import com.user.user.service.userservice;
+import com.user.user.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +37,9 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-
+import com.user.user.auth.MyUserDetailsService;
+import com.user.user.model.AuthenticationRequest;
+import com.user.user.model.AuthenticationResponse;
 import com.user.user.model.role;
 import com.user.user.model.user;
 import com.user.user.repository.userrepo;
@@ -45,99 +54,118 @@ public class usercontroller {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-  
-
     @Autowired
     private emailservice es;
 
     @Autowired
     private userrepo ur;
 
-    // @ModelAttribute("user") //When User submits form, this is where the user data is stored to be used in the POST
+    @Autowired
+    private AuthenticationManager authenticationManager; // authenticates a new username and password token
+
+    @Autowired
+    private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
+
+    // @ModelAttribute("user") //When User submits form, this is where the user data
+    // is stored to be used in the POST
     // public user newuser(){
-    //     return new user();
+    // return new user();
     // }
 
     // @GetMapping("/register")
     // public ModelAndView registerForm(ModelAndView mv){
-    //     mv.setViewName("registration");
-    //     mv.addObject("user", new user());
-    //     return mv;
+    // mv.setViewName("registration");
+    // mv.addObject("user", new user());
+    // return mv;
     // }
+
     @PostMapping("/register")
-    public String create(@RequestBody user users) {  //@Model Attribute is being used in place of response body here 
+    public String create(@RequestBody user users) {
 
-            String pwd = users.getPassWord();
-            String encryptPwd = passwordEncoder.encode(pwd);
-            users.setPassWord(encryptPwd);
-            user registereduser = us.register(users);
+        String pwd = users.getPassWord();
+        String encryptPwd = passwordEncoder.encode(pwd);
+        users.setPassWord(encryptPwd);
+        user registereduser = us.register(users);
 
-            es.sendSimpleEmail(users.getEmail(), "Confirmation Email", "To confirm your email address, use this verification code: " + registereduser.getVerificationcode());
-            return "Verification code sent!";
-        }
-            
-       
-        
-    
+        es.sendSimpleEmail(users.getEmail(), "Confirmation Email",
+                "To confirm your email address, use this verification code: " + registereduser.getVerificationcode());
+        return "Verification code sent!";
+    }
 
-    @GetMapping("/activation/")
-    public String activation(@RequestParam String verificationcode ){
-        
+    @GetMapping("/activation")
+    public String activation(@RequestParam String verificationcode) {
 
-         
-    user confirmeduser = ur.getUserByToken(verificationcode);
+        user confirmeduser = ur.getUserByToken(verificationcode);
 
         confirmeduser.setEnabled(true);
-        
+
         ur.save(confirmeduser);
-        
 
         return "Your account has been confirmed!";
 
-    
     }
 
-    
     @GetMapping("/all")
     public List<user> getAllUser() {
         return us.findAll();
     }
 
+    @PostMapping("/authenticate") // takes in request for authentication, which contains the post body UserDetails                            // as request body
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
+            throws Exception {
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            throw new Exception("Incorrect username or password", e); // if credentials are incorrect
+        }
+
+        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+
+        final String jwt = jwtTokenUtil.generateToken(userDetails); // creates token
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/admin/adminpage")
     public String admin() {
-        return "<h2>Hello Admin!</h2>";
+    return "<h2>Hello Admin!</h2>";
     }
 
     // @GetMapping("/hr")
     // public String hr() {
-    //     return "<h2>Hello hr!</h2>";
+    // return "<h2>Hello hr!</h2>";
     // }
 
-    // @PreAuthorize("hasAnyRole('CAND')")
-    // @GetMapping("/cand/candpage")
-    // public String cand() {
-    //     return "<h2>Hello Candidate!</h2>";
-    // }
+    @PreAuthorize("hasAnyRole('CAND')")
+    @GetMapping("/cand/candpage")
+    public String cand() {
+    return "<h2>Hello Candidate!</h2>";
+    }
 
     // @GetMapping("/intr")
     // public String intr() {
-    //     return "<h2>Hello Interviewer!</h2>";
+    // return "<h2>Hello Interviewer!</h2>";
     // }
 
     // @GetMapping("/recru")
     // public String recru() {
-    //     return "<h2>Hello Recruter!</h2>";
+    // return "<h2>Hello Recruter!</h2>";
     // }
 
     // @GetMapping("/sched")
     // public String sched() {
-    //     return "<h2>Hello Scheduler!</h2>";
+    // return "<h2>Hello Scheduler!</h2>";
     // }
 
     // @GetMapping("/panel")
     // public String panel() {
-    //     return "<h2>Hello Panelist!</h2>";
+    // return "<h2>Hello Panelist!</h2>";
     // }
 
     // @GetMapping("getById/{id}")

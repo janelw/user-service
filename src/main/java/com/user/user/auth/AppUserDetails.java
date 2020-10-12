@@ -14,7 +14,6 @@ public class AppUserDetails implements UserDetails {
 
 
     private user user;
- 
         
 
     @Override

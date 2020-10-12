@@ -1,8 +1,0 @@
-{
-    "TemplateName": "SampleTemplate",
-    "FromEmailAddress": "sender@example.com",
-    "TemplateSubject": "Please confirm your email address",
-    "TemplateContent": "<html><head>Verification Email</head><p>Thank you for registering for the Recruitment Management System </p></html>",
-  "SuccessRedirectionURL": "https://www.example.com/verifysuccess",
-    "FailureRedirectionURL": "https://www.example.com/verifyfailure"
-}
