@@ -3,8 +3,8 @@ package com.user.user.service;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
-import com.google.common.base.Optional;
 // import com.user.user.model.ConfirmationToken;
 import com.user.user.model.role;
 import com.user.user.model.user;
@@ -14,6 +14,7 @@ import com.user.user.repository.userrepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.userdetails.UserDetails;
 // import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 // import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class userservice {
 
     @Autowired
     private JavaMailSender mailsender;
+
 
     // @Autowired
     // private confirmationtokenservice confirmationTokenService;
@@ -74,6 +76,10 @@ public class userservice {
         return ur.findAll();
     }
 
+    public user findUserById(int id) {
+        return ur.getUserById(id);
+    }
+
     // public user findUserByUsername(String username){
     //     return ur.findByUsername(username);
     // }
@@ -81,6 +87,8 @@ public class userservice {
     // public int findIdByUsername(String username){
     //     return findUserByUsername(username).getUserId();
     // }
+
+ 
 
     public boolean updatePasswordById(int user_id, String password){
         if (ur.existsById(user_id)){
@@ -126,7 +134,7 @@ public class userservice {
 
     public boolean deleteUserByUser(user userr){
         if(ur.existsById(userr.getUserId())){
-            ur.delete(userr);
+            ur.deleteById(userr.getUserId());
             return true;
         }else{
             return false;

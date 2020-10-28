@@ -3,6 +3,7 @@ package com.user.user.model;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // import org.springframework.security.core.GrantedAuthority;
 // import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -102,6 +104,7 @@ public class user{
     }
 
     public user(int userId, String firstName, String lastName, String userName, String passWord, String email, String phonenumber, String hAddress, String hCity, String hState, String hZip, Timestamp created, Boolean enabled, String verificationcode, Set<role> roles) {
+        super();
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

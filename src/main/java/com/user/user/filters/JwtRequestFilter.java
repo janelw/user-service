@@ -1,6 +1,7 @@
 package com.user.user.filters;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,6 +19,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
+
 
 
 @Component
@@ -28,6 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -57,4 +62,27 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
+
+    // private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request){
+    //     String token = request.getHeader("Authorization");
+
+    //     if(token != null){
+    //         String user;
+    //         try{
+    //             user =Jwts.parser()
+    //                     .setSigningKey(("secret").getBytes())
+    //                     .parseClaimsJws(token.replaceFirst(("Bearer"), " "))
+    //                     .getBody()
+    //                     .getSubject();
+    //         }catch(SignatureException e){
+    //             return null;
+    //         }
+    //         UserDetails userDetails = this.myUserDetailsService.loadUserByUsername(user);
+
+    //         if(user != null) return new UsernamePasswordAuthenticationToken(user,null, new ArrayList<>());
+
+    //     }
+    //     return null;
+    // }
+    // return null;
 }

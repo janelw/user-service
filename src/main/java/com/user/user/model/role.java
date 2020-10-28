@@ -1,5 +1,6 @@
 package com.user.user.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -16,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "role")
-public class role {
+public class role implements Serializable{
 
 @Id
 @Column(name = "roleid")

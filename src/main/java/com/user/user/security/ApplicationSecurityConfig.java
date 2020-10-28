@@ -9,12 +9,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.user.user.filters.JwtRequestFilter;;
 
 @Configuration
@@ -44,14 +44,25 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs/**");
+        web.ignoring().antMatchers("/swagger.json");
+        web.ignoring().antMatchers("/swagger-ui.html");
+        web.ignoring().antMatchers("/swagger-resources/**");
+        web.ignoring().antMatchers("/webjars/**");
+    }
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http
+ 
+        http.csrf().disable().cors()
+        .and()
         .authorizeRequests().antMatchers("/user/**").permitAll()
         .and()
         .authorizeRequests().antMatchers("/authenticate/**").permitAll()
+        .and()
+        .authorizeRequests().antMatchers("/public/**").permitAll()
         .and().authorizeRequests().antMatchers("/cand/**").hasAnyRole("CAND")
-        .and().authorizeRequests().antMatchers("/recr/**").hasAnyRole("RECR")
+        .and().authorizeRequests().antMatchers("/recr/**").hasAnyRole("HRECR")
         .and().authorizeRequests().antMatchers("/panel/**").hasAnyRole("PANEL")
         .and().authorizeRequests().antMatchers("/inter/**").hasAnyRole("INTER")
         .and().authorizeRequests().antMatchers("/hr/**").hasAnyRole("HR")
