@@ -1,0 +1,17 @@
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\model\user.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\security\ApplicationUserPermission.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\repository\userrepo.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\security\ApplicationUserRole.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\controller\rolecontroller.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\model\ConfirmationToken.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\model\role.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\security\PasswordConfig.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\service\userservice.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\service\roleservice.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\controller\usercontroller.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\security\ApplicationSecurityConfig.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\UserApplication.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\repository\rolerepo.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\service\confirmationtokenservice.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\auth\UserDetailServiceImpl.java
+C:\Users\janel.williams\Documents\Projects\user\user-service\src\main\java\com\user\user\repository\confirmtokenrepo.java

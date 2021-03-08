@@ -1,0 +1,10 @@
+com\user\user\service\userservice.class
+com\user\user\model\user.class
+com\user\user\repository\rolerepo.class
+com\user\user\UserApplication.class
+com\user\user\model\role.class
+com\user\user\controller\usercontroller.class
+com\user\user\security\ApplicationUserPermission.class
+com\user\user\controller\rolecontroller.class
+com\user\user\service\roleservice.class
+com\user\user\repository\userrepo.class
